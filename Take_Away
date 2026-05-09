@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <regex>
 using namespace std;
 
 
@@ -11,10 +12,10 @@ class Customer_contact
     public:
     string customer_name;
     string customer_addres;
-    int customer_phone;
+    string customer_phone;
     float total;
     
-    Customer_contact(string cn, string cd, int cp )
+    Customer_contact(string cn, string cd, string cp )
     {
         customer_name = cn;
         customer_addres =cd;
@@ -35,7 +36,7 @@ class Total_price : public Customer_contact
     vector<int> meal_quantity;
 
     public:
-    Total_price(string cn,string cd, int cp, vector<string> m_i,vector<int> mq, string to, float tp): Customer_contact(cn,cd,cp)
+    Total_price(string cn,string cd, string cp, vector<string> m_i,vector<int> mq, string to, float tp): Customer_contact(cn,cd,cp)
     {
         Menu_item = m_i;
         Type_of_order = to;
@@ -58,6 +59,8 @@ class Total_price : public Customer_contact
         cout<<"Type of order: "<<Type_of_order<<endl;
         cout<<"Total price: "<<total_price<<"\x9C" <<endl;
     }
+
+ 
 
   
 };
@@ -149,6 +152,21 @@ class Menu_sales :public  Menu_Item
         {
            return  Availability;
         }
+
+ void getphone(string *phone)
+    {
+    
+         regex pattern(R"(^(\+44|0)?\s?[0-9]{4}\s?[0-9]{6}$)");
+
+        if(regex_match(*phone,pattern))
+        {
+             cout << "Valid phone number"<<endl;
+        }
+        else
+        {
+            cout << "Invalid phone number"<<endl;
+        }
+    }
 
     
 
@@ -309,7 +327,7 @@ class Menu
 
      
     
-    int phone;
+    string phone;
     int Menu =0;
     int quantity;
     float total_income =0;
@@ -353,7 +371,9 @@ class Menu
     cout << "Location" << endl;
     cin >> location;
     cout << "Phone number" << endl;
-    cin >> phone;
+    cin.ignore();
+    getline(cin,phone);
+    m1->getphone(&phone);
   
    while(true)
     {
@@ -455,6 +475,7 @@ class Menu
                Item_name.push_back("Gyros");
              m1->Most_popular_cuisine(&cyprus, &greece, &Menu);
              m1->total_orders(&quantity,&totalorders);
+            
              
              break;
         }
